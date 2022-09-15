@@ -40,16 +40,21 @@ class FeatureExtractor:
                 self.batch_feature_objects[bf] = tr
 
     def fit(self, x: np.ndarray, y: np.ndarray):
+        print('pointwise feature')
         for pwfo in self.pointwise_feature_objects.values():
             pwfo.fit(x, y)
 
+        print('batch feature feature')
+        bat_cnt = 0
         for bfo in self.batch_feature_objects.values():
+            bat_cnt = 1
             ptype = bfo.pointwise_type
             # If the required pointwise transformer already exists, point the batch feature to it
             if ptype in self.pointwise_features:
                 bfo.set_pointwise_transformer(self.pointwise_feature_objects[ptype])
             # Fit should check if we already loaded from a pointwise transformer
             bfo.fit(x, y)
+        print('batch feature completed : ', str(bat_cnt))
         self.fit_flag = True
 
     # Logic shared across transforming test and prod
